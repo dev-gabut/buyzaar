@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 import {
   Card,
   CardAction,
@@ -20,9 +21,6 @@ export default function LoginPage() {
           <CardDescription>
             Enter your email below to login to your account
           </CardDescription>
-          <CardAction>
-            <Button variant="link">Sign Up</Button>
-          </CardAction>
         </CardHeader>
         <form>
           <CardContent>
@@ -50,12 +48,12 @@ export default function LoginPage() {
               </div>
             </div>
           </CardContent>
-          <CardFooter className="flex-col gap-2">
+          <CardFooter className="flex-col gap-2 mt-6">
             <Button type="submit" className="w-full">
               Login
             </Button>
-            <Button variant="outline" className="w-full">
-              Login with Google
+            <Button variant="outline" className="w-full" asChild>
+              <Link href="/register">Register</Link>
             </Button>
           </CardFooter>
         </form>
