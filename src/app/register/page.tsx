@@ -18,7 +18,6 @@ export default function RegisterPage() {
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    console.log({ email, password }); // handle logic here
   }
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
