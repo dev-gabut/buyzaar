@@ -1,7 +1,9 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
@@ -11,6 +13,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useState } from 'react';
+import { ChevronLeftIcon } from 'lucide-react';
 
 export default function RegisterPage() {
   const [email, setEmail] = useState('');
@@ -23,6 +26,16 @@ export default function RegisterPage() {
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
       <Card className="w-full max-w-sm">
         <CardHeader>
+          <Button
+            variant="secondary"
+            size="icon"
+            className="size-8 mb-2"
+            asChild
+          >
+            <Link href="/login">
+              <ChevronLeftIcon />
+            </Link>
+          </Button>
           <CardTitle>Register your account</CardTitle>
           <CardDescription>
             Enter your email below to register to your account
