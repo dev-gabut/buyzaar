@@ -21,8 +21,8 @@ export default function RegisterPage() {
             Enter your email below to register to your account
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <form>
+        <form>
+          <CardContent>
             <div className="flex flex-col gap-6">
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
@@ -40,13 +40,13 @@ export default function RegisterPage() {
                 <Input id="password" type="password" required />
               </div>
             </div>
-          </form>
-        </CardContent>
-        <CardFooter className="flex-col gap-2">
-          <Button type="submit" className="w-full">
-            Register
-          </Button>
-        </CardFooter>
+          </CardContent>
+          <CardFooter className="flex-col gap-2">
+            <Button type="submit" className="w-full">
+              Register
+            </Button>
+          </CardFooter>
+        </form>
       </Card>
     </div>
   );
