@@ -1,0 +1,136 @@
+
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model User {
+  id            Int       @id @default(autoincrement())
+  name          String?   @db.VarChar(100)
+  email         String    @unique @db.VarChar(100)
+  password_hash String
+  role          String    @db.VarChar(20)
+  created_at    DateTime  @default(now())
+  addresses     Address[]
+  shops         Shop[]
+  orders        Order[]   @relation("buyer_orders")
+  reviews       Review[]
+}
+
+model Address {
+  id          Int      @id @default(autoincrement())
+  user_id     Int
+  label       String?  @db.VarChar(100)
+  address_text String?
+  city        String?  @db.VarChar(100)
+  province    String?  @db.VarChar(100)
+  postal_code String?  @db.VarChar(10)
+  is_default  Boolean  @default(false)
+  user        User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  orders      Order[]
+}
+
+model Shop {
+  id          Int      @id @default(autoincrement())
+  user_id     Int
+  shop_name   String?  @db.VarChar(100)
+  description String?
+  created_at  DateTime @default(now())
+  user        User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  products    Product[]
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  shop_id     Int
+  name        String   @db.VarChar(150)
+  description String?
+  price       Decimal  @db.Decimal(12,2)
+  stock       Int
+  category_id Int?
+  created_at  DateTime @default(now())
+  shop        Shop     @relation(fields: [shop_id], references: [id], onDelete: Cascade)
+  category    Category? @relation(fields: [category_id], references: [id])
+  images      ProductImage[]
+  orderItems  OrderItem[]
+  reviews     Review[]
+}
+
+model ProductImage {
+  id         Int     @id @default(autoincrement())
+  product_id Int
+  image_url  String
+  is_primary Boolean @default(false)
+  product    Product @relation(fields: [product_id], references: [id], onDelete: Cascade)
+}
+
+model Order {
+  id          Int        @id @default(autoincrement())
+  buyer_id    Int
+  address_id  Int
+  total_amount Decimal   @db.Decimal(12,2)
+  status      String     @db.VarChar(50)
+  created_at  DateTime   @default(now())
+  buyer       User       @relation("buyer_orders", fields: [buyer_id], references: [id])
+  address     Address    @relation(fields: [address_id], references: [id])
+  items       OrderItem[]
+  payments    Payment[]
+  shippings   Shipping[]
+}
+
+model OrderItem {
+  id         Int     @id @default(autoincrement())
+  order_id   Int
+  product_id Int
+  quantity   Int
+  price      Decimal @db.Decimal(12,2)
+  order      Order   @relation(fields: [order_id], references: [id], onDelete: Cascade)
+  product    Product @relation(fields: [product_id], references: [id])
+}
+
+model Payment {
+  id             Int      @id @default(autoincrement())
+  order_id       Int
+  payment_method String?  @db.VarChar(50)
+  payment_status String?  @db.VarChar(50)
+  paid_at        DateTime?
+  order          Order    @relation(fields: [order_id], references: [id])
+}
+
+model Review {
+  id         Int      @id @default(autoincrement())
+  user_id    Int
+  product_id Int
+  rating     Int
+  comment    String?
+  created_at DateTime @default(now())
+  user       User     @relation(fields: [user_id], references: [id])
+  product    Product  @relation(fields: [product_id], references: [id])
+}
+
+model Shipping {
+  id              Int                  @id @default(autoincrement())
+  order_id        Int
+  courier_name    String?              @db.VarChar(50)
+  tracking_number String?              @db.VarChar(100)
+  status          String?              @db.VarChar(50)
+  shipped_at      DateTime?
+  delivered_at    DateTime?
+  order           Order                @relation(fields: [order_id], references: [id], onDelete: Cascade)
+  statusLogs      ShippingStatusLog[]
+}
+
+model ShippingStatusLog {
+  id          Int      @id @default(autoincrement())
+  shipping_id Int
+  status      String?  @db.VarChar(50)
+  note        String?
+  timestamp   DateTime @default(now())
+  shipping    Shipping @relation(fields: [shipping_id], references: [id], onDelete: Cascade)
+}
