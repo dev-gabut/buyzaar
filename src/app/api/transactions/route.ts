@@ -7,6 +7,15 @@ const MIDTRANS_SERVER_KEY = process.env.MIDTRANS_SERVER_KEY;
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
+    // [VALIDATION] Perform input validation on the request body properties
+    const requiredFields = [
+      'total_price', 'full_name', 'email', 'phone', 'address', 'postal_code', 'product', 'unit_price', 'quantity', 'shipping_cost', 'insurance_cost'
+    ];
+    for (const field of requiredFields) {
+      if (!body[field]) {
+        return NextResponse.json({ error: `${field} is required` }, { status: 400 });
+      }
+    }
     // ***************** Create Snap API instance
     let snap = new midtransClient.Snap({
       isProduction: false,
